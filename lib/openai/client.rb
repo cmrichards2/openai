@@ -100,15 +100,14 @@ module OpenAI
 
     private def post(path, body: nil, read_timeout: 120)
       uri = URI.parse("https://api.openai.com#{path}")
-      req = Net::HTTP::Post.new(uri)
-      req.read_timeout = read_timeout
+      req = Net::HTTP::Post.new(uri)      
       req.body = body.to_json      
       headers.each do |name, value|
         req[name] = value
-      end
-      response = Net::HTTP.start(uri.hostname, uri.port, use_ssl: true) do |http|
+      end      
+      response = Net::HTTP.start(uri.hostname, uri.port, use_ssl: true, read_timeout: read_timeout) do |http|
         http.request(req)
-      end
+      end      
       handle_response(response)
     end
 
